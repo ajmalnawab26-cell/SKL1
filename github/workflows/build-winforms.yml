@@ -1,17 +1,22 @@
 name: Build WinForms EXE
-
 on:
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup .NET
+      - name: Show files (debug)
+        run: |
+          echo "Root listing:"
+          dir
+          echo "Project files:"
+          dir SKL1
+
+      - name: Setup .NET 8
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
@@ -19,7 +24,7 @@ jobs:
       - name: Restore
         run: dotnet restore SKL1/RishtaManagerPro.csproj
 
-      - name: Publish (single-file EXE)
+      - name: Publish single-file EXE
         run: dotnet publish SKL1/RishtaManagerPro.csproj -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true
 
       - name: Upload artifact
